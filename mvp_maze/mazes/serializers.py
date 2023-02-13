@@ -9,20 +9,31 @@ from .maze_calculator import ASCII_CODE_A
 
 class StringArrayField(serializers.Field):
     """
-    String representation of an array field.
+    String representation of an array field. Used for serializing and
+    deserializing a list of strings.
     """
     def to_representation(self, obj):
+        """
+        Transform the native value into a primitive data type. Converting a string
+        to a list of strings.
+        """
         if isinstance(obj, str):
             obj = ast.literal_eval(obj)
         
         return obj
 
     def to_internal_value(self, data):
+        """
+        Transform the received data to a db value. No need to transform
+        the lsit of strings because it is stored in the db as a string already.
+        """
         return data
 
 
 class MazeSerializer(serializers.ModelSerializer):
-
+    """
+    Serializer class for a Maze
+    """
     walls = StringArrayField()
 
     class Meta:
@@ -30,17 +41,29 @@ class MazeSerializer(serializers.ModelSerializer):
         fields = ['owner', 'gridSize', 'entrance', 'walls']
 
     def validate(self, res: OrderedDict):
+        """
+        Validate the given maze.
+        """
         grid_size = res.get("gridSize")
         entrance = res.get("entrance")
         walls = res.get("walls")
 
         self._validate_input_format(grid_size, entrance, walls)
 
-        self._validate_matrix_format(grid_size, entrance, walls)
+        self._validate_matrix_format(grid_size, walls)
 
         return res
 
     def _validate_input_format(self, grid_size, entrance, walls):
+        """
+        Validate the formats of the maze configurations, by checking them against
+        regular expressions. The function raises the appropriate exception if one
+        of the formats does not match.
+        :param grid_size: String representing the gridSize field
+        :param entrance: String representing the input entrance field
+        :param walls: List of strings representing the walls
+        """
+        # define the regular expressions
         element_pattern = r"^[A-Z][1-9][0-9]*$"
         grid_size_pattern = r"^[1-9][0-9]*x[1-9][0-9]*$"
 
@@ -57,7 +80,15 @@ class MazeSerializer(serializers.ModelSerializer):
             if not element_match:
                 raise exceptions.InvalidMazeElementException
 
-    def _validate_matrix_format(self, grid_size, entrance, walls):
+    def _validate_matrix_format(self, grid_size, walls):
+        """
+        Validate the format of the given maze by performing multiple sanity
+        checks. For example, to see if the walls fit withing the given grid,
+        or if the bottom edge of matrix contains only walls. The function
+        raises the appropriate exception in case one of the checks fails.
+        :param grid_size: String identifying the gridSize
+        :param walls: List of strings which identify the walls
+        """
         grid_size_list = grid_size.split('x')
 
         nr_cols = int(grid_size_list[0])
@@ -81,6 +112,6 @@ class MazeSerializer(serializers.ModelSerializer):
             if wall_row == nr_rows - 1:
                 bottom_edge_columns[wall_col] = 1
 
+        # if there are only walls on the bottom edge, then raise exception because there is no possible exit
         if all(elem == 1 for elem in bottom_edge_columns):
             raise exceptions.ThereIsNoExitException
-

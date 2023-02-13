@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 
 
 class Maze(models.Model):
-
+    """
+    Class which defines the model for a Maze
+    """
     class Meta:
         verbose_name = 'Maze'
         verbose_name_plural = 'Mazes'
@@ -13,4 +15,3 @@ class Maze(models.Model):
     gridSize = models.CharField(max_length=20)
     entrance = models.CharField(max_length=20)
     walls = models.TextField()
-

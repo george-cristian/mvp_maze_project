@@ -9,9 +9,15 @@ from .serializers import RegisterSerializer, UserSerializer
 
 
 class RegisterAPI(generics.GenericAPIView):
+    """
+    View for the register API.
+    """
     serializer_class = RegisterSerializer
 
     def post(self, request, *args, **kwargs):
+        """
+        Post function to register a new user.
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -25,9 +31,15 @@ class RegisterAPI(generics.GenericAPIView):
 
 
 class LoginAPI(KnoxLoginView):
+    """
+    View for the loging API using knox to manage authentication tokens.
+    """
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request, format=None):
+        """
+        Post function to login a user.
+        """
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 

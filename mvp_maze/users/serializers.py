@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework import serializers, validators
+from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,6 +17,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
+        """
+        Function which creates a new user in the database.
+        """
         username = validated_data.get('username')
         password = validated_data.get('password')
 

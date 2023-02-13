@@ -15,15 +15,22 @@ class MazeViewSet(ListModelMixin,
                   UpdateModelMixin,
                   viewsets.GenericViewSet):
     
+    # allow only authenticated users to access the views
     permission_classes = (IsAuthenticated, )
     serializer_class = MazeSerializer
     lookup_field = 'id'
 
     def get_queryset(self):
+        """
+        API function which returns the mazes created by the calling user.
+        """
         user = self.request.user
         return Maze.objects.filter(owner=user)
 
     def create(self, request):
+        """
+        API function to create a new maze.
+        """
         try:
             data = JSONParser().parse(request)
             serializer = MazeSerializer(data=data)
@@ -42,6 +49,11 @@ class MazeViewSet(ListModelMixin,
 
     @action(detail=True, methods=['get'])
     def solution(self, request, *args, **kwargs):
+        """
+        API function for the solution endpoint which is called by users to calculate
+        the solution to the maze.
+        """
+        # check if the appropriate query parameters are provided
         steps = request.GET.get('steps', '')
         if not steps or steps not in ['min', 'max']:
             return Response("Please provide a valid steps query parameter", status=status.HTTP_400_BAD_REQUEST)

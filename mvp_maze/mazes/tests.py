@@ -9,7 +9,6 @@ class MazeTestCase(APITestCase):
     """
     Test suite for Maze
     """
-
     def setUp(self):
         """Set up the test suite"""
         self.first_user = User.objects.create_user(

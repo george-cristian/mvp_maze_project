@@ -5,19 +5,36 @@ from . import exceptions
 ASCII_CODE_A = 65
 
 class MazeCalculator(object):
-
+    """
+    Class which contains static functions used for calculating the shortest
+    and longest paths in a maze.
+    """
     @staticmethod
     def calculate_solution(maze, calculation_type):
+        """
+        Function which converts a given maze and calculates the path to exit
+        using the given type. The solution path is then converted back to
+        a format accepted by the API.
+        :param maze: Maze object which contains the configuration for the maze
+        :param calculation_type: String which defines if the shortest or longest
+                                 path should be computed (min or max)
+        :return: list of maze points which indicates the solution path
+                 Ex: ['A1', 'C1', 'D1']
+        """
+        # convert the entrance points from string to numbers
         entrance_col = ord(maze.entrance[0]) - ASCII_CODE_A
         entrance_row = int(maze.entrance[1:]) - 1
 
+        # convert the maze configuration to a matrix of ones and zeros
         matrix = MazeCalculator._convert_maze_to_matrix(maze)
 
+        # compute the solution path
         solution_path = MazeCalculator._find_path_to_exit(matrix, (entrance_col, entrance_row), calculation_type)
 
         if solution_path is None:
             raise exceptions.NoExitFoundException
 
+        # convert back the solution path to a list of strings
         converted_path = []
         for (row, col) in solution_path:
             converted_col = chr(col + ASCII_CODE_A)
@@ -28,6 +45,12 @@ class MazeCalculator(object):
 
     @staticmethod
     def _convert_maze_to_matrix(maze):
+        """
+        Function which converts a maze configuration to a matrix of ones and
+        zeros.
+        :param maze: A maze object which contains the configuration
+        :return: A matrix containing ones (walls) and zeros
+        """
         grid_size = maze.gridSize
         grid_size_list = grid_size.split('x')
 
@@ -36,6 +59,7 @@ class MazeCalculator(object):
 
         matrix = [[0 for _ in range(nr_cols)] for _ in range(nr_rows)]
         
+        # iterate over the walls and set the position to one in the matrix
         walls = ast.literal_eval(maze.walls)
         for wall in walls:
             wall_col = ord(wall[0]) - ASCII_CODE_A
@@ -46,16 +70,31 @@ class MazeCalculator(object):
         return matrix    
 
     @staticmethod
-    def _find_path_to_exit(maze, entrance, type):
-        if type == "max":
-            return MazeCalculator._longest_path_to_bottom(maze, entrance)
+    def _find_path_to_exit(matrix, entrance, search_type):
+        """
+        Function which calls the appropriate search function based on the
+        search type, to compute the maze solution.
+        :param matrix: The matrix in which the solution is searched
+        :param entrance: The entrance point in the matrix
+        :param search_type: The type of search. Either min or max
+        :return: The solution path to the maze
+        """
+        if search_type == "max":
+            return MazeCalculator._longest_path_to_bottom(matrix, entrance)
         else:
-            return MazeCalculator._shortest_path_to_bottom(maze, entrance)
+            return MazeCalculator._shortest_path_to_bottom(matrix, entrance)
 
     @staticmethod
-    def _shortest_path_to_bottom(maze, entrance):
+    def _shortest_path_to_bottom(matrix, entrance):
+        """
+        Function which searches and computes the shortest path in the matrix.
+        It uses the Breadth First Search algorithm (with some adaptations) in
+        order to find the shortest path.
+        :param matrix: The matrix in which the solution is searched
+        :param entrance: The entrance point in the matrix
+        """
         moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        nr_rows, nr_cols = len(maze), len(maze[0])
+        nr_rows, nr_cols = len(matrix), len(matrix[0])
 
         # Initialize a queue for the BFS algorithm
         queue = deque([entrance])
@@ -74,7 +113,7 @@ class MazeCalculator(object):
             curr_row, curr_col = current_point
 
             # If there is a wall in the current point, then continue to the next one
-            if maze[curr_row][curr_col] == 1:
+            if matrix[curr_row][curr_col] == 1:
                 continue
 
             # If the bottom edge is reached, continue
@@ -107,9 +146,16 @@ class MazeCalculator(object):
         return path
 
     @staticmethod
-    def _longest_path_to_bottom(maze, entrance):
+    def _longest_path_to_bottom(matrix, entrance):
+        """
+        Function which searches and computes the longest path in the matrix.
+        It uses the Depth First Search algorithm (with some adaptations) in
+        order to find the longest path.
+        :param matrix: The matrix in which the solution is searched
+        :param entrance: The entrance point in the matrix
+        """
         moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        nr_rows, nr_cols = len(maze), len(maze[0])
+        nr_rows, nr_cols = len(matrix), len(matrix[0])
 
         # Initialize a stack to be used in the depth first search algorithm
         stack = [entrance]
@@ -129,7 +175,7 @@ class MazeCalculator(object):
             curr_row, curr_col = current_point
 
             # If there is a wall in the current point, then continue to the next one
-            if maze[curr_row][curr_col] == 1:
+            if matrix[curr_row][curr_col] == 1:
                 continue
             
             # If the bottom edge is reached, check if there was another possible solution found, otherwise continue
@@ -163,6 +209,17 @@ class MazeCalculator(object):
     
     @staticmethod
     def _reconstruct_path(point, entrance, predecessors):
+        """
+        Helper function which reconstructs a path from a given point to the
+        entrance, using its predecessor nodes which are computed by the
+        BFS or DFS algorithms.
+        :param point: Tuple which defines point from which the path is reconstructed
+        :param entrance: Tuple which defines the entrance point
+        :param predecessors: Dictionary containing a mapping between the current
+                             point and its predecessor, as computed by the BFS
+                             or DFS algorithms
+        :return: A list of points starting from the entrance point until the given point
+        """
         path = []
         while point != entrance:
             path.append(point)

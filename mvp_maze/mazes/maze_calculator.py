@@ -2,21 +2,18 @@ import ast
 from collections import deque
 from . import exceptions
 
+ASCII_CODE_A = 65
 
 class MazeCalculator(object):
 
     @staticmethod
     def calculate_solution(maze, calculation_type):
-        entrance_col = ord(maze.entrance[0]) - 65
+        entrance_col = ord(maze.entrance[0]) - ASCII_CODE_A
         entrance_row = int(maze.entrance[1:]) - 1
 
         matrix = MazeCalculator._convert_maze_to_matrix(maze)
 
-        solution_path = None
-        try:
-            solution_path = MazeCalculator._find_path_to_exit(matrix, (entrance_col, entrance_row), calculation_type)
-        except ValueError as exc:
-            raise
+        solution_path = MazeCalculator._find_path_to_exit(matrix, (entrance_col, entrance_row), calculation_type)
 
         if solution_path is None:
             raise exceptions.NoExitFoundException
@@ -24,7 +21,7 @@ class MazeCalculator(object):
         converted_path = []
         converted_path.append(maze.entrance)
         for (row, col) in solution_path:
-            converted_col = chr(col + 65)
+            converted_col = chr(col + ASCII_CODE_A)
             converted_row = row + 1
             converted_path.append("%s%d" % (converted_col, converted_row))
 
@@ -42,7 +39,7 @@ class MazeCalculator(object):
         
         walls = ast.literal_eval(maze.walls)
         for wall in walls:
-            wall_col = ord(wall[0]) - 65
+            wall_col = ord(wall[0]) - ASCII_CODE_A
             wall_row = int(wall[1:]) - 1
 
             matrix[wall_row][wall_col] = 1

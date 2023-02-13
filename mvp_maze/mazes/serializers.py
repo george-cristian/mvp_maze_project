@@ -4,6 +4,7 @@ import re
 from rest_framework import serializers
 from .models import Maze
 from . import exceptions
+from .maze_calculator import ASCII_CODE_A
 
 
 class StringArrayField(serializers.Field):
@@ -40,8 +41,8 @@ class MazeSerializer(serializers.ModelSerializer):
         return res
 
     def _validate_input_format(self, grid_size, entrance, walls):
-        grid_size_pattern = r"^[A-Z][1-9][0-9]*$"
-        element_pattern = r"^[1-9][0-9]*x[1-9][0-9]*$"
+        element_pattern = r"^[A-Z][1-9][0-9]*$"
+        grid_size_pattern = r"^[1-9][0-9]*x[1-9][0-9]*$"
 
         grid_size_match = re.search(grid_size_pattern, grid_size)
         if not grid_size_match:
@@ -68,7 +69,7 @@ class MazeSerializer(serializers.ModelSerializer):
         bottom_edge_columns = [0] * nr_cols
 
         for wall in walls:
-            wall_col = ord(wall[0]) - 65
+            wall_col = ord(wall[0]) - ASCII_CODE_A
             wall_row = int(wall[1:]) - 1
 
             if wall_col < 0 or wall_col >= nr_cols:

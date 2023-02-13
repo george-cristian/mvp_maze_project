@@ -19,7 +19,6 @@ class MazeCalculator(object):
             raise exceptions.NoExitFoundException
 
         converted_path = []
-        converted_path.append(maze.entrance)
         for (row, col) in solution_path:
             converted_col = chr(col + ASCII_CODE_A)
             converted_row = row + 1
@@ -48,63 +47,127 @@ class MazeCalculator(object):
 
     @staticmethod
     def _find_path_to_exit(maze, entrance, type):
-        # Define possible moves (up, down, left, right)
-        moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        
-        # Define a queue to store nodes to visit and a set to store visited nodes
-        queue = deque([(entrance, [])])
-        visited = set([entrance])
-        
-        # Define a variable to store the shortest path found so far
-        shortest_path = None
-        longest_path = None
-        
-        # Iterate over the queue until it is empty
-        while queue:
-            # Dequeue the next node to visit and its path
-            curr, path = queue.popleft()
-            
-            # Check if the current node is on the bottom edge of the maze
-            if curr[0] == len(maze) - 1:
-                if type == 'min':
-                    # If this is the first exit found, set shortest path to it
-                    if shortest_path is None:
-                        shortest_path = path
-                    # Otherwise, update shortest path if necessary
-                    else:
-                        # Check if the exit point is the same as the already found path. If not, raise a error
-                        if path[-1][0] != shortest_path[-1][0] or path[-1][1] != shortest_path[-1][1]:
-                            raise exceptions.MultipleExitsException
-                        elif len(path) < len(shortest_path):
-                            shortest_path = path
-                else:
-                    # If this is the first exit found, set longest path path to it
-                    if longest_path is None:
-                        longest_path = path
-                    # Otherwise, update shortest path if necessary
-                    else:
-                        # Check if the exit point is the same as the already found path. If not, raise a error
-                        if path[-1][0] != shortest_path[-1][0] or path[-1][1] != shortest_path[-1][1]:
-                            raise exceptions.MultipleExitsException
-                        elif len(path) > len(longest_path):
-                            longest_path = path
-            
-            # Check all possible moves from the current node
-            for move in moves:
-                next_node = (curr[0] + move[0], curr[1] + move[1])
-                
-                # Check if the next node is a valid open path and has not been visited before
-                is_next_node_valid = (0 <= next_node[0] < len(maze) and 0 <= next_node[1] < len(maze[0]) and maze[next_node[0]][next_node[1]] == 0)
-
-                if is_next_node_valid and next_node not in visited:
-                    # Add the next node and its path to the queue and visited set
-                    queue.append((next_node, path + [next_node]))
-                    visited.add(next_node)
-        
-        result_path = None
-        if type == 'min':
-            result_path = shortest_path
+        if type == "max":
+            return MazeCalculator._longest_path_to_bottom(maze, entrance)
         else:
-            result_path = longest_path
+            return MazeCalculator._shortest_path_to_bottom(maze, entrance)
 
-        return result_path
+    @staticmethod
+    def _shortest_path_to_bottom(maze, entrance):
+        moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        nr_rows, nr_cols = len(maze), len(maze[0])
+
+        # Initialize a queue for the BFS algorithm
+        queue = deque([entrance])
+
+        # Initialize a dictionary to store and remember all the path lengths from a point
+        path_lengths = {entrance: 0}
+
+        # This is a dictionary used to trace back the path from a given point
+        predecessors = {}
+
+        # This variable is used to check if there are multiple exit points found
+        first_bottom_edge_point = None
+
+        while queue:
+            current_point = queue.popleft()
+            curr_row, curr_col = current_point
+
+            # If there is a wall in the current point, then continue to the next one
+            if maze[curr_row][curr_col] == 1:
+                continue
+
+            # If the bottom edge is reached, continue
+            if curr_row == nr_rows - 1:
+                if not first_bottom_edge_point:
+                    first_bottom_edge_point = current_point
+                elif first_bottom_edge_point != current_point:
+                    raise exceptions.MultipleExitsException
+                continue
+            
+            # Iterate over all of the possible moves
+            for move in moves:
+                next_point = (curr_row + move[0], curr_col + move[1])
+                # Check if the next point is valid and was not visited
+                if (0 <= next_point[0] < nr_rows) and \
+                   (0 <= next_point[1] < nr_cols) and \
+                    next_point not in path_lengths:
+                    # Register the next point in the queue and the visited dictionary and register its predecessor
+                    queue.append(next_point)
+                    path_lengths[next_point] = path_lengths[current_point] + 1
+                    predecessors[next_point] = current_point
+
+        # In case a solution was not found, return None
+        if first_bottom_edge_point is None:
+            return None
+
+        # Reconstruct the shortest path starting from the solution point
+        path = MazeCalculator._reconstruct_path(first_bottom_edge_point, entrance, predecessors)
+
+        return path
+
+    @staticmethod
+    def _longest_path_to_bottom(maze, entrance):
+        moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        nr_rows, nr_cols = len(maze), len(maze[0])
+
+        # Initialize a stack to be used in the depth first search algorithm
+        stack = [entrance]
+
+        # Dictionary to keep track of the path length for each visited point
+        path_lengths = {entrance: 0}
+
+        # Keep track of the point from which we arrived at the current point. Used for reconstructing the path
+        predecessors = {}
+
+        # This variable is used to check if there are multiple exit points found
+        first_bottom_edge_point = None
+
+        while stack:
+            current_point = stack.pop()
+
+            curr_row, curr_col = current_point
+
+            # If there is a wall in the current point, then continue to the next one
+            if maze[curr_row][curr_col] == 1:
+                continue
+            
+            # If the bottom edge is reached, check if there was another possible solution found, otherwise continue
+            if curr_row == nr_rows-1:
+                if not first_bottom_edge_point:
+                    first_bottom_edge_point = current_point
+                elif first_bottom_edge_point != current_point:
+                    raise exceptions.MultipleExitsException
+                continue
+
+            # Iterate over all of the possible moves
+            for move in moves:
+                next_point = (curr_row + move[0], curr_col + move[1])
+                # Check if the next point is valid and was not visited
+                if (0 <= next_point[0] < nr_rows) and \
+                   (0 <= next_point[1] < nr_cols) and \
+                    next_point not in path_lengths:
+                    # Register the next point in the stack and the visited dictionary and register its predecessor
+                    stack.append(next_point)
+                    path_lengths[next_point] = path_lengths[current_point] + 1
+                    predecessors[next_point] = current_point
+
+        # In case a solution was not found, return None
+        if first_bottom_edge_point is None:
+            return None
+
+        # Reconstruct the shortest path starting from the solution point
+        path = MazeCalculator._reconstruct_path(first_bottom_edge_point, entrance, predecessors)
+
+        return path
+    
+    @staticmethod
+    def _reconstruct_path(point, entrance, predecessors):
+        path = []
+        while point != entrance:
+            path.append(point)
+            point = predecessors[point]
+        path.append(entrance)
+        path.reverse()
+
+        return path

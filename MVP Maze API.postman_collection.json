@@ -1,0 +1,305 @@
+{
+	"info": {
+		"_postman_id": "ca2e22dd-771a-4cc4-88e1-775b0adca4ab",
+		"name": "MVP Maze API",
+		"description": "This is a collection for testing the MVP Maze REST API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25812512"
+	},
+	"item": [
+		{
+			"name": "https://mvp-maze-api.herokuapp.com/login/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"authToken\", data.data.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test_user\",\r\n    \"password\": \"test_password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://mvp-maze-api.herokuapp.com/login/",
+					"protocol": "https",
+					"host": [
+						"mvp-maze-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"login",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://mvp-maze-api.herokuapp.com/maze/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"firstMazeId\", data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"entrance\": \"A1\",\r\n    \"gridSize\": \"8x8\",\r\n    \"walls\": [\"C1\", \"G1\", \"A2\", \"C2\", \"E2\", \"G2\", \"C3\", \"E3\", \"B4\", \"C4\", \"E4\", \"F4\", \"G4\", \"B5\", \"E5\", \"B6\", \"D6\", \"E6\", \"G6\", \"H6\", \"B7\", \"D7\", \"G7\", \"B8\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+					"protocol": "https",
+					"host": [
+						"mvp-maze-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"maze",
+						""
+					]
+				},
+				"description": "Create a first maze, as given also in the initial documentation"
+			},
+			"response": []
+		},
+		{
+			"name": "https://mvp-maze-api.herokuapp.com/maze/",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"entrance\": \"A1\",\r\n    \"gridSize\": \"4x4\",\r\n    \"walls\": [\"A2\", \"C2\", \"A3\", \"A4\", \"C4\", \"D4\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+					"protocol": "https",
+					"host": [
+						"mvp-maze-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"maze",
+						""
+					]
+				},
+				"description": "Create a maze with a min and a max path which are different"
+			},
+			"response": []
+		},
+		{
+			"name": "https://mvp-maze-api.herokuapp.com/maze/",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"entrance\": \"A1\",\r\n    \"gridSize\": \"4x4\",\r\n    \"walls\": [\"A2\", \"C2\", \"A3\", \"A4\", \"B4\", \"C4\", \"D4\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+					"protocol": "https",
+					"host": [
+						"mvp-maze-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"maze",
+						""
+					]
+				},
+				"description": "Create a maze with no exit point"
+			},
+			"response": []
+		},
+		{
+			"name": "https://mvp-maze-api.herokuapp.com/maze/",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"entrance\": \"A1\",\r\n    \"gridSize\": \"4x4\",\r\n    \"walls\": [\"A2\", \"B2\", \"C2\", \"D2\", \"A3\", \"A4\", \"C4\", \"D4\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+					"protocol": "https",
+					"host": [
+						"mvp-maze-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"maze",
+						""
+					]
+				},
+				"description": "Create a maze with no solution"
+			},
+			"response": []
+		},
+		{
+			"name": "https://mvp-maze-api.herokuapp.com/maze/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+					"protocol": "https",
+					"host": [
+						"mvp-maze-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"maze",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://mvp-maze-api.herokuapp.com/maze/1/solution/?steps=min",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://mvp-maze-api.herokuapp.com/maze/1/solution/?steps=min",
+					"protocol": "https",
+					"host": [
+						"mvp-maze-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"maze",
+						"1",
+						"solution",
+						""
+					],
+					"query": [
+						{
+							"key": "steps",
+							"value": "min"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://mvp-maze-api.herokuapp.com/maze/1/solution/?steps=max",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://mvp-maze-api.herokuapp.com/maze/1/solution/?steps=max",
+					"protocol": "https",
+					"host": [
+						"mvp-maze-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"maze",
+						"1",
+						"solution",
+						""
+					],
+					"query": [
+						{
+							"key": "steps",
+							"value": "max"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

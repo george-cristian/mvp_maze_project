@@ -42,3 +42,9 @@ class NoExitFoundException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = 'No exit was found for the given maze'
     default_code = 'invalid'
+
+
+class InvalidEntranceException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'The given entrance is a wall'
+    default_code = 'invalid'

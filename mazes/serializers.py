@@ -50,7 +50,7 @@ class MazeSerializer(serializers.ModelSerializer):
 
         self._validate_input_format(grid_size, entrance, walls)
 
-        self._validate_matrix_format(grid_size, walls)
+        self._validate_matrix_format(grid_size, entrance, walls)
 
         return res
 
@@ -80,7 +80,7 @@ class MazeSerializer(serializers.ModelSerializer):
             if not element_match:
                 raise exceptions.InvalidMazeElementException
 
-    def _validate_matrix_format(self, grid_size, walls):
+    def _validate_matrix_format(self, grid_size, entrance, walls):
         """
         Validate the format of the given maze by performing multiple sanity
         checks. For example, to see if the walls fit withing the given grid,
@@ -99,6 +99,9 @@ class MazeSerializer(serializers.ModelSerializer):
 
         bottom_edge_columns = [0] * nr_cols
 
+        entrance_col = ord(entrance[0]) - ASCII_CODE_A
+        entrance_row = int(entrance[1:]) - 1
+
         for wall in walls:
             wall_col = ord(wall[0]) - ASCII_CODE_A
             wall_row = int(wall[1:]) - 1
@@ -108,6 +111,9 @@ class MazeSerializer(serializers.ModelSerializer):
 
             if wall_row < 0 or wall_row >= nr_rows:
                 raise exceptions.InvalidWallException
+
+            if entrance_col == wall_col and entrance_row == wall_row:
+                raise exceptions.InvalidEntranceException
 
             if wall_row == nr_rows - 1:
                 bottom_edge_columns[wall_col] = 1

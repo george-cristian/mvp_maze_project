@@ -1,0 +1,1238 @@
+{
+	"info": {
+		"_postman_id": "ca2e22dd-771a-4cc4-88e1-775b0adca4ab",
+		"name": "MVP Maze API",
+		"description": "This is a collection for testing the MVP Maze REST API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25812512"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Login user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);\r",
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.collectionVariables.set(\"authToken\", data.data.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test_user\",\r\n    \"password\": \"test_password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/login/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create valid mazes",
+			"item": [
+				{
+					"name": "Create valid maze - min same as max",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);\r",
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.collectionVariables.set(\"validMazeSolution1\", data.data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrance\": \"A1\",\r\n    \"gridSize\": \"8x8\",\r\n    \"walls\": [\"C1\", \"G1\", \"A2\", \"C2\", \"E2\", \"G2\", \"C3\", \"E3\", \"B4\", \"C4\", \"E4\", \"F4\", \"G4\", \"B5\", \"E5\", \"B6\", \"D6\", \"E6\", \"G6\", \"H6\", \"B7\", \"D7\", \"G7\", \"B8\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								""
+							]
+						},
+						"description": "Create a first maze, as given also in the initial documentation"
+					},
+					"response": []
+				},
+				{
+					"name": "Create valid maze - min different than max",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);\r",
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.collectionVariables.set(\"validMazeSolution2\", data.data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrance\": \"A1\",\r\n    \"gridSize\": \"4x4\",\r\n    \"walls\": [\"A2\", \"C2\", \"A3\", \"A4\", \"C4\", \"D4\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								""
+							]
+						},
+						"description": "Create a maze with a min and a max path which are different"
+					},
+					"response": []
+				},
+				{
+					"name": "Create valid maze - bigger matrix",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);\r",
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.collectionVariables.set(\"validMazeSolution3\", data.data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrance\": \"B1\",\r\n    \"gridSize\": \"13x17\",\r\n    \"walls\": [\"C1\", \"D2\", \"E3\", \"D4\", \"C5\", \"A6\", \"C6\", \"D6\", \"E6\", \"F6\", \"A7\", \"G7\", \"A8\", \"G8\", \"A9\", \"G9\", \"H9\", \"I9\", \"J9\", \"K9\", \"L9\", \"B10\", \"F10\", \"G10\", \"H10\", \"K10\", \"B11\", \"K11\", \"B12\", \"K12\", \"B13\", \"G13\", \"H13\", \"I13\", \"J13\", \"K13\", \"B14\", \"G14\", \"B15\", \"G15\", \"B16\", \"G16\", \"B17\", \"C17\", \"D17\", \"E17\", \"G17\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								""
+							]
+						},
+						"description": "Create a maze with a min and a max path which are different"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create invalid mazes",
+			"item": [
+				{
+					"name": "Create invalid maze - invalid format grid size",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(responseJson.errors[0].detail).to.include(\"Invalid format for gridSize\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrance\": \"A1\",\r\n    \"gridSize\": \"0x4\",\r\n    \"walls\": [\"A2\", \"C2\", \"A3\", \"A4\", \"C4\", \"D4\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								""
+							]
+						},
+						"description": "Create a maze with a min and a max path which are different"
+					},
+					"response": []
+				},
+				{
+					"name": "Create invalid maze - invalid format entrance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(responseJson.errors[0].detail).to.include(\"Invalid format for a maze element\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrance\": \"A0\",\r\n    \"gridSize\": \"4x4\",\r\n    \"walls\": [\"A2\", \"C2\", \"A3\", \"A4\", \"C4\", \"D4\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								""
+							]
+						},
+						"description": "Create a maze with a min and a max path which are different"
+					},
+					"response": []
+				},
+				{
+					"name": "Create invalid maze - entrance same as wall",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(responseJson.errors[0].detail).to.include(\"The given entrance is a wall\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrance\": \"A2\",\r\n    \"gridSize\": \"4x4\",\r\n    \"walls\": [\"A2\", \"C2\", \"A3\", \"A4\", \"C4\", \"D4\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								""
+							]
+						},
+						"description": "Create a maze with a min and a max path which are different"
+					},
+					"response": []
+				},
+				{
+					"name": "Create invalid maze - invalid walls",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(responseJson.errors[0].detail).to.include(\"Invalid format for a maze element\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrance\": \"A1\",\r\n    \"gridSize\": \"4x4\",\r\n    \"walls\": [\"A2\", \"C2\", \"A0\", \"A4\", \"C4\", \"D4\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								""
+							]
+						},
+						"description": "Create a maze with a min and a max path which are different"
+					},
+					"response": []
+				},
+				{
+					"name": "Create invalid maze - walls on bottom edge",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(responseJson.errors[0].detail).to.include(\"The bottom edge of the maze contains only walls, so there is no exit\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrance\": \"A1\",\r\n    \"gridSize\": \"4x4\",\r\n    \"walls\": [\"A2\", \"C2\", \"A3\", \"A4\", \"B4\", \"C4\", \"D4\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								""
+							]
+						},
+						"description": "Create a maze with no exit point"
+					},
+					"response": []
+				},
+				{
+					"name": "Create valid maze - without walls",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);\r",
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.collectionVariables.set(\"validMazeNoWalls\", data.data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrance\": \"A1\",\r\n    \"gridSize\": \"4x4\",\r\n    \"walls\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								""
+							]
+						},
+						"description": "Create a maze with a min and a max path which are different"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create mazes with invalid solutions",
+			"item": [
+				{
+					"name": "Create invalid maze - multiple exits",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);\r",
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.collectionVariables.set(\"invalidMazeMultipleExits\", data.data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrance\": \"A1\",\r\n    \"gridSize\": \"4x4\",\r\n    \"walls\": [\"A2\", \"C2\", \"A3\", \"A4\", \"C4\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								""
+							]
+						},
+						"description": "Create a maze with a min and a max path which are different"
+					},
+					"response": []
+				},
+				{
+					"name": "Create invalid maze - no exit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);\r",
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.collectionVariables.set(\"invalidMazeNoExit\", data.data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrance\": \"A1\",\r\n    \"gridSize\": \"4x4\",\r\n    \"walls\": [\"A2\", \"B2\", \"C2\", \"D2\", \"A3\", \"A4\", \"C4\", \"D4\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								""
+							]
+						},
+						"description": "Create a maze with no solution"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get mazes",
+			"item": [
+				{
+					"name": "Get all mazes for logged in user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get valid solutions",
+			"item": [
+				{
+					"name": "Get min solution for maze 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Solution is correct\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.path).to.eql([\"A1\", \"B1\", \"B2\", \"B3\", \"A3\", \"A4\", \"A5\", \"A6\", \"A7\", \"A8\"]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/{{validMazeSolution1}}/solution/?steps=min",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								"{{validMazeSolution1}}",
+								"solution",
+								""
+							],
+							"query": [
+								{
+									"key": "steps",
+									"value": "min"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get max solution for maze 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Solution is correct\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.path).to.eql([\"A1\", \"B1\", \"B2\", \"B3\", \"A3\", \"A4\", \"A5\", \"A6\", \"A7\", \"A8\"]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/{{validMazeSolution1}}/solution/?steps=max",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								"{{validMazeSolution1}}",
+								"solution",
+								""
+							],
+							"query": [
+								{
+									"key": "steps",
+									"value": "max"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get min solution for maze 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Solution is correct\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.path).to.eql([\"A1\", \"B1\", \"B2\", \"B3\", \"B4\"]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/{{validMazeSolution2}}/solution/?steps=min",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								"{{validMazeSolution2}}",
+								"solution",
+								""
+							],
+							"query": [
+								{
+									"key": "steps",
+									"value": "min"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get max solution for maze 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Solution is correct\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.path).to.eql([\"A1\", \"B1\", \"C1\", \"D1\", \"D2\", \"D3\", \"C3\", \"B3\", \"B4\"]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/{{validMazeSolution2}}/solution/?steps=max",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								"{{validMazeSolution2}}",
+								"solution",
+								""
+							],
+							"query": [
+								{
+									"key": "steps",
+									"value": "max"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get min solution for maze 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Solution is correct\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.path).to.eql([\"A2\", \"A3\", \"A4\", \"A5\", \"B5\", \"B6\", \"B7\", \"B8\", \"B9\", \"C9\", \"C10\", \"C11\", \"C12\", \"C13\", \"C14\", \"C15\", \"C16\", \"D16\", \"E16\", \"F16\", \"F17\"]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/{{validMazeSolution3}}/solution/?steps=min",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								"{{validMazeSolution3}}",
+								"solution",
+								""
+							],
+							"query": [
+								{
+									"key": "steps",
+									"value": "min"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get max solution for maze 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Solution is correct\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.path).to.eql([\"A2\", \"B2\", \"C2\", \"C3\", \"C4\", \"B4\", \"B5\", \"B6\", \"B7\", \"C7\", \"D7\", \"E7\", \"F7\", \"F8\", \"F9\", \"E9\", \"D9\", \"C9\", \"C10\", \"C11\", \"D11\", \"E11\", \"F11\", \"F12\", \"F13\", \"E13\", \"D13\", \"C13\", \"C14\", \"C15\", \"D15\", \"E15\", \"F15\", \"F16\", \"F17\"]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/{{validMazeSolution3}}/solution/?steps=max",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								"{{validMazeSolution3}}",
+								"solution",
+								""
+							],
+							"query": [
+								{
+									"key": "steps",
+									"value": "max"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get invalid solutions",
+			"item": [
+				{
+					"name": "Get min solution for maze without walls",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(responseJson.errors[0].detail).to.eql(\"Multiple possible exits from the maze were found. The maze should have only one exit point\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/{{validMazeNoWalls}}/solution/?steps=min",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								"{{validMazeNoWalls}}",
+								"solution",
+								""
+							],
+							"query": [
+								{
+									"key": "steps",
+									"value": "min"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get max solution for maze without walls",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(responseJson.errors[0].detail).to.eql(\"Multiple possible exits from the maze were found. The maze should have only one exit point\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/{{validMazeNoWalls}}/solution/?steps=max",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								"{{validMazeNoWalls}}",
+								"solution",
+								""
+							],
+							"query": [
+								{
+									"key": "steps",
+									"value": "max"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get solution no query params",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(responseJson.errors).to.eql(\"Please provide a valid steps query parameter\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/{{validMazeSolution2}}/solution/",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								"{{validMazeSolution2}}",
+								"solution",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get solution invalid query params",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(responseJson.errors).to.eql(\"Please provide a valid steps query parameter\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/{{validMazeSolution2}}/solution/?solution=medium",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								"{{validMazeSolution2}}",
+								"solution",
+								""
+							],
+							"query": [
+								{
+									"key": "solution",
+									"value": "medium"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get solution multiple exits",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(responseJson.errors[0].detail).to.eql(\"Multiple possible exits from the maze were found. The maze should have only one exit point\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/{{invalidMazeMultipleExits}}/solution/?steps=min",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								"{{invalidMazeMultipleExits}}",
+								"solution",
+								""
+							],
+							"query": [
+								{
+									"key": "steps",
+									"value": "min"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get solution no exit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(responseJson.errors[0].detail).to.eql(\"No exit was found for the given maze\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://mvp-maze-api.herokuapp.com/maze/{{invalidMazeNoExit}}/solution/?steps=min",
+							"protocol": "https",
+							"host": [
+								"mvp-maze-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"maze",
+								"{{invalidMazeNoExit}}",
+								"solution",
+								""
+							],
+							"query": [
+								{
+									"key": "steps",
+									"value": "min"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "Token {{authToken}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "Authorization",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "variable_key",
+			"value": ""
+		},
+		{
+			"key": "validMazeSolution1",
+			"value": ""
+		},
+		{
+			"key": "validMazeSolution2",
+			"value": ""
+		},
+		{
+			"key": "invalidMazeMultipleExits",
+			"value": ""
+		},
+		{
+			"key": "invalidMazeNoExit",
+			"value": ""
+		},
+		{
+			"key": "validMazeNoWalls",
+			"value": ""
+		},
+		{
+			"key": "validMazeSolution3",
+			"value": ""
+		}
+	]
+}
